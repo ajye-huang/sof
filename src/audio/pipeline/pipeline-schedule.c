@@ -53,6 +53,8 @@ DECLARE_SOF_UUID("dp-task", dp_task_uuid, 0xee755917, 0x96b9, 0x4130,
 
 static void pipeline_schedule_cancel(struct pipeline *p)
 {
+// HACK: host hack
+return;
 	schedule_task_cancel(p->pipe_task);
 
 	/* enable system agent panic, when there are no longer
@@ -428,10 +430,13 @@ void pipeline_comp_trigger_sched_comp(struct pipeline *p,
 /* notify pipeline that this component requires buffers emptied/filled */
 void pipeline_schedule_copy(struct pipeline *p, uint64_t start)
 {
+	// HACK host does nOT need thsi
+	return;
+#ifndef CONFIG_HOST
 	/* disable system agent panic for DMA driven pipelines */
-	if (!pipeline_is_timer_driven(p))
-		sa_set_panic_on_delay(false);
-
+	//if (!pipeline_is_timer_driven(p))
+	//	sa_set_panic_on_delay(false);
+#endif
 	/*
 	 * With connected pipelines some pipelines can be re-used for multiple
 	 * streams. E.g. if playback pipelines A and B are connected on a mixer,
